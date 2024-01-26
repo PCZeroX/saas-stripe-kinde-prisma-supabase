@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { siteConfig } from "@/config/site";
-import { Navbar } from "@/components/common/navbar";
+import { Navbar } from "@/components/nav/navbar";
 
 const ThemeProvider = dynamic(
   () => import("@/components/providers/theme-provider"),
@@ -42,7 +42,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         >
           <Navbar />
           <div>
-            <div className="container mx-auto py-12">{children}</div>
+            <div className="container mx-auto">{children}</div>
           </div>
         </ThemeProvider>
       </body>
