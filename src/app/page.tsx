@@ -1,7 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-const HomePage = () => {
+import { Button } from "@/components/ui/button";
+
+const HomePage = async () => {
+  const { isAuthenticated } = getKindeServerSession();
+  const isAuth = await isAuthenticated();
+
+  if (isAuth) {
+    return redirect("/dashboard");
+  }
+
   return (
     <section className="flex items-center justify-center bg-background h-[90vh]">
       <div className="relative items-center w-full px-5 py-12 mx-auto lg:px-16 max-w-7xl md:px-12">
