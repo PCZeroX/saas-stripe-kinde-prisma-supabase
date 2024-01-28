@@ -1,6 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
 
 export const getData = async ({
   email,
@@ -35,6 +36,21 @@ export const getData = async ({
         id: id,
         email: email,
         name: name,
+      },
+    });
+  }
+
+  if (!user?.stripe_customer_id) {
+    const data = await stripe.customers.create({
+      email: email,
+    });
+
+    await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        stripe_customer_id: data.id,
       },
     });
   }
