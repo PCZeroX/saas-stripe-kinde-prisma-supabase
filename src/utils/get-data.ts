@@ -1,4 +1,4 @@
-import { unstable_noStore } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 
@@ -15,7 +15,7 @@ export const getData = async ({
   lastName?: string | null;
   profileImage?: string | null;
 }) => {
-  unstable_noStore();
+  noStore();
 
   const user = await prisma.user.findUnique({
     where: {

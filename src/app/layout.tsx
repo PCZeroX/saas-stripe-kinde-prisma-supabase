@@ -3,8 +3,14 @@ import "@/styles/globals.css";
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
+import { cn } from "@/lib/utils";
 
 import { siteConfig } from "@/config/site";
+
+import { getColor } from "@/utils/get-color";
+
 import { Navbar } from "@/components/nav/navbar";
 
 const ThemeProvider = dynamic(
@@ -30,10 +36,17 @@ export const metadata: Metadata = {
   ],
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const { getUser } = getKindeServerSession();
+
+  const user = await getUser();
+  const data = await getColor(user?.id!);
+
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={cn(inter.className, data?.color_scheme ?? "theme-orange")}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
