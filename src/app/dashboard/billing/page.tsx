@@ -3,7 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { prisma } from "@/lib/prisma";
-import { getStripeSession } from "@/lib/stripe";
+import { getStripeSession, stripe } from "@/lib/stripe";
 
 import { featureItems } from "@/data/feature-items";
 
@@ -54,8 +54,18 @@ const BillingPage = async () => {
     return redirect(subscriptionUrl);
   };
 
-  const createCustomerPortal = async (formData: FormData) => {
+  const createCustomerPortal = async () => {
     "use server";
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: data?.user.stripe_customer_id!,
+      return_url:
+        process.env.NODE_ENV === "production"
+          ? process.env.PRODUCTION_URL!
+          : "http://localhost:3000/dashboard",
+    });
+
+    return redirect(session.url);
   };
 
   if (data?.status === "active") {
